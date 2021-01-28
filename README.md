@@ -1,6 +1,34 @@
-# Getting Started with Create React App
+# Esame per il modulo di React - 28/01/2021 - CFP-Futura
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://api.chucknorris.io).\
+Thanks to [Chuck Norris Jokes API](https://github.com/facebook/create-react-app).
+
+## Esercizi da svolgere:
+1. salvare il contenuto di `input`, rendendolo quindi un componente controllato;
+2. al click del pulsante `.Search-Button`, recuperare la lista delle citazioni; utilizzando l'input salvato al punto precedente, interrogando l'api all'indirizzo definito dalla costante `ALLJOKESBYKEYWORD` (a cui si deve aggiungere la parola chiave);
+3. Ogni qual volta è in corso una chiamata API, il componente `Logo` deve roteare grazie alla classe CSS `App-Logo-Spinning`;
+4. Salve la prima delle citazioni ottenuta tramite `3)` e visualizzarla tramite il componente `Joke` (un eventuale categoria selezionata deve essere rimossa);
+5. Far sparire la porzione di codice nel `render()` per visualizzare la categoria selezionata nel caso in cui quest'ultima sia assente (ad esempio dopo la ricerca del punto 2);
+6. In caso di errore dalle api, richiamare la funzione `launchErrorAlert()` tramite un meccanismo scaturito al di fuori delle funzioni delle funzioni che effettuano la chiamata;
+    1. all'interno della funzione da cui è scaturito l'errore, invece, mostrare nella parte di costrutto del `catch()` un `console.error()` contentente un messaggio di errore specifico:
+        1. ad esempio, cercando come parola chiave "xyz" non otterremo alcun risultato.
+7. all'avvio dell'applicazione, recuperare la lista delle categorie interrogando l'api all'indirizzo definito dalla costante `ALLCATEGORIESURL`
+8. salvare il contenuto della chiamata precedente e passarlo al componente `<CategoriesList />` che a sua volta renderizzerà un `<CategoryButton />` per ciascuno dei suoi elementi;
+9. Al click di un `<CategoryButton />` la categoria da esso rappresentato deve essere salvata e mostrata in `.Selected-Cat`
+10. Recuperare una barzelletta casuale per la categoria selezionata tramite il punto `9)` premendo il pulsante `.RandomButton`, interrogando le api all'indirizzo specificato dalla costante `RANDOMJOKEBYCATURL` (a cui si deve aggiungere la categoria selezionata);
+11. Salvare la barzelletta recuperata nel punto precedente e visualizzarla tramite il componente `<Joke />`;
+12. Resettare il campo di input di testo per keyword quando viene visualizzata una la barzelletta casuale per categoria;
+13. Al click di una categoria tramite il componente `<CategoryButton />` far sparire la citazione recuperata per la categoria precedente.
+
+E' possibile eseguire gli esercizi utilizzando una delle due sintassi fra **FC** *(Functional Component)* e **Class Component**.
+
+*Per ottenere la sufficienza, è necessario svolgere **in maniera corretta** :*
+- *i punti **da 1) a 6)** utilizzando la sintassi del **FC*** per il componente `App`
+- *i punti **da 1) a 8)** utilizzando la sintassi del **Class Component*** per il componente `App`
+
+
+## 
+
 
 ## Available Scripts
 
@@ -12,59 +40,4 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+You will also see any lint errors in the console
