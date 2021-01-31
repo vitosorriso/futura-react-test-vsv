@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, } from 'react'
 import logo from './logo.svg';
 import './App.css';
 
@@ -42,126 +42,128 @@ const Joke = ({ value, categories }) => {
   )
 }
 
-class App extends React.Component {
-// function App() {
+// class App extends React.Component {
+function App() {
   // qui tutto ciò che serve al componente per essere inizializzato
-  constructor() {
-    super()
-    this.state = {
-      loading: false,
-      error: false,
-      categories: [],
-      selectedCategory: '',
-      fetchedJoke: {},
-      inputText: '',
-      ciaoText: ''
-    }
-  }
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [fetchedJoke, setFetchedJoke] = useState({})
+  const [inputText, setInputText] = useState('')
 
   // getAllCategories
   // funzione che deve recuperare l'array di tutte le categorie esistenti e salvarlo
-  getAllCategories = async () => {
-    let error = false
-    let categories = []
+  const getAllCategories = async () => {
+    let dataError = false
+    let dataCategories = []
     try {
-      this.setState({ loading: true })
+      setLoading(true)
       const response = await fetch(ALLCATEGORIESURL)
       const result = await response.json()
       if (!Array.isArray(result)) throw new Error('CATEGORY ERROR')
-      categories = [ '', ...result]
+      dataCategories = [ '', ...result]
     } catch (err) {
-      error = true
+      dataError = true
     } finally {
-      this.setState({ ...this.state, loading: false, error, categories })
+      setLoading(false)
+      setError(dataError)
+      setCategories(dataCategories)
     }
   }
 
   // onCategoryClick
   // funzione richiamata al click del componente CategoryButton
-  onCategoryClick = (selectedCategory) => (event) => this.setState({
-    ...this.state,
-    selectedCategory,
-    fetchedJoke: {}
-  })
+  const onCategoryClick = (cat) => (event) => {
+    setSelectedCategory(cat)
+    setFetchedJoke({})
+  }
 
   // getRandomJokeByCat
   // funzione che recupera una singola barzelletta e la salva
-  getRandomJokeByCat = async () => {
-    let error = false
-    let fetchedJoke = {}
+  const getRandomJokeByCat = async () => {
+    let dataError = false
+    let dataRes = {}
     try {
-      this.setState({ loading: true })
-      const response = await fetch(`${RANDOMJOKEBYCATURL}${this.state.selectedCategory}`)
+      setLoading(true)
+      const response = await fetch(`${RANDOMJOKEBYCATURL}${selectedCategory}`)
       const result = await response.json()
       if (result && result.status) throw new Error('NO SELECTED CATEGORY')
-      fetchedJoke = {...result}
+      dataRes = {...result}
     } catch (err) {
-      error = true
+      dataError = true
       console.error('error?', err.message)
     } finally {
-      this.setState({ loading: false, error, fetchedJoke, inputText: '' })
+      setLoading(false)
+      setError(dataError)
+      setFetchedJoke(dataRes)
+      setInputText('')
     }
   }
 
   // getJokeByKeyword
   // funzione che recupera le barzellette contenenti la parola chiave
   // digitata nel campo di testo
-  getJokeByKeyword = async () => {
-    let error = false
-    let fetchedJoke = {}
+  const getJokeByKeyword = async () => {
+    let dataError = false
+    let dataRes = {}
     try {
-      this.setState({ loading: true })
-      const response = await fetch(`${ALLLJOKESBYKEYWORD}${this.state.inputText}`)
+      setLoading(true)
+      setSelectedCategory('')
+      const response = await fetch(`${ALLLJOKESBYKEYWORD}${inputText}`)
       const result = await response.json()
+      console.log('result??', result)
       if (result && result.status) throw new Error('INVALID KEYWORD')
       if (result && result.result.length === 0) throw new Error('NO RESULTS')
-      fetchedJoke = {...result.result[0]}
+      dataRes = {...result.result[0]}
     } catch (err) {
-      error = true
+      dataError = true
       console.error('error?', err.message)
     } finally {
-      this.setState({ loading: false, error, fetchedJoke, selectedCategory: '' })
+      setLoading(false)
+      setError(dataError)
+      setFetchedJoke(dataRes)
     }
   }
 
   // onInputTextChange
   // handler per l'input di testo
-  onInputTextChange = (event) => this.setState({ inputText: event.target.value })
+  const onInputTextChange = (event) => setInputText(event.target.value)
 
   // qui i lifecycle methods
-  componentDidMount() {
-    this.getAllCategories()
-  }
+  useEffect(() => {
+    getAllCategories()
+  }, [])
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!prevState.error && this.state.error) launchErrorAlert()
-  }
+  useEffect(() => {
+    if (error) launchErrorAlert()
+  }, [error])
 
-  render () {
+  // render () {
     return (
       <div className="App">
         <div className="App-header">
           <Logo
-            loading={this.state.loading}
+            loading={loading}
           />
           <input
             type="search"
             id="search" name="search"
             placeholder="Enter keyword here"
-            value={this.state.inputText}
-            onChange={this.onInputTextChange}
+            value={inputText}
+            onChange={onInputTextChange}
           />
           <button
             className="Search-Button"
-            onClick={this.getJokeByKeyword}
-            disabled={this.state.loading}
+            onClick={getJokeByKeyword}
+            disabled={loading}
           >
             <code>CLICK TO SEARCH!</code>
           </button>
           <code>or: </code>
           <CategoriesList
-            categories={this.state.categories}
-            onCategoryClick={this.onCategoryClick}
+            categories={categories}
+            onCategoryClick={onCategoryClick}
           />
         </div>
         <div className="Content">
@@ -170,30 +172,30 @@ class App extends React.Component {
             className="Chuck-Logo"
             alt="chuck-logo"
           />
-          {this.state.selectedCategory !== '' && (
+          {selectedCategory !== '' && (
             <code>
               <h2>SELECTED CATEGORY:
                 <span className="Selected-Cat">
-                  {this.state.selectedCategory}
+                  {selectedCategory}
                 </span>
               </h2>
             </code>
           )}
           <button
             className="Random-Button"
-            onClick={this.getRandomJokeByCat}
-            disabled={this.state.loading}
+            onClick={getRandomJokeByCat}
+            disabled={loading}
           >
             <h2>GET RANDOM JOKE FOR SELECTED CATEGORY</h2>
           </button>
-          {Object.keys(this.state.fetchedJoke).length > 0 && <Joke {...this.state.fetchedJoke} />}
+          {Object.keys(fetchedJoke).length > 0 && <Joke {...fetchedJoke} />}
         </div>
         <div className="footer">
         <code>Esame di React per cfp-futura. Grazie ad <a href="https://api.chucknorris.io">api.chucknorris.io</a> per l'immagine e le api. Docente: Vito Vitale. Studente: </code>
         </div>
       </div>
     );
-  }
+  // }
 };
 
 export default App;
